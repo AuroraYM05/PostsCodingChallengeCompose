@@ -1,5 +1,21 @@
 <resources>
-    <string name="app_name">PostsCodingChallengeCompose</string>
-    
+    <!--App-->
+    <string name="app_name">Post Coding Challenge</string>
+
+    <!--Vista HomeScreen-->
+    <string name="app_title">Coding Challenge</string>
+    <string name="name_btn">Ver publicaciones</string>
+
+    <!--Vista ListItem-->
     <string name="ListItem_textPublication">Publicado por el usuario # </string>
+    <string name="image_like_description">Me gusta</string>
+    <string name="image_dislike_description">No me gusta</string>
+    <string name="image_views_description">Vistas</string>
+
+    <!--Vista ListScreen-->
+    <string name="text_publications">Lista de publicaciones</string>
+    <string name="text_error_message">No se lograrón cargar las publicaciones</string>
+    <string name="txt_btn_error">Cargar de nuevo</string>
+    <string name="text_empty_posts">No hay publicaciones disponibles</string>
+
 </resources>

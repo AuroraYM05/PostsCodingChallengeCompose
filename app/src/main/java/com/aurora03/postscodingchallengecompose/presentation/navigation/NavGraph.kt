@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.aurora03.postscodingchallengecompose.presentation.home.PostHomeScreen
 import com.aurora03.postscodingchallengecompose.presentation.posts.PostListScreen
-import com.aurora03.postscodingchallengecompose.presentation.posts.PostListScreenPreview
 
 
 /**

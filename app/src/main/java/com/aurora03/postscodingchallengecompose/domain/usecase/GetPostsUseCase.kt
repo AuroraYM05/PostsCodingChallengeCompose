@@ -15,6 +15,6 @@ class GetPostsUseCase @Inject constructor(
      * Define una funcion que puede suspenderse y que se
      * puede llamra usando el nombre del objeto.
      */
-    suspend operator fun invoke(): Flow<Resource<PostsPage>> = repository.getPosts()
+    operator fun invoke(): Flow<Resource<PostsPage>> = repository.getPosts()
 
 }

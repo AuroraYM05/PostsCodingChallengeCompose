@@ -12,16 +12,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aurora03.postscodingchallengecompose.R
 import com.aurora03.postscodingchallengecompose.ui.theme.Inter
 import com.aurora03.postscodingchallengecompose.ui.theme.PostsCodingChallengeComposeTheme
 
@@ -32,23 +30,15 @@ import com.aurora03.postscodingchallengecompose.ui.theme.PostsCodingChallengeCom
 @Composable
 fun PostHomeScreen(
     onNavigateToPosts: () -> Unit,
-    viewModel: PostHomeViewModel = hiltViewModel()
 ){
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     PostHomeContent(
-        state = uiState,
-        onAction = { action ->
-            when(action){
-                PostHomeActions.OnPostClicked ->onNavigateToPosts()
-            }
-        }
+        onNavigateToPosts = onNavigateToPosts
     )
 }
 @Composable
 fun PostHomeContent(
-    state: PostHomeState,
-    onAction : (PostHomeActions) -> Unit
+    onNavigateToPosts: () -> Unit
 ){
     Scaffold(
         modifier = Modifier
@@ -64,7 +54,7 @@ fun PostHomeContent(
         ) {
             Text(
                 modifier = Modifier,
-                text = "Coding Challenge",
+                text = stringResource(id = R.string.app_title),
                 fontFamily = Inter,
                 fontWeight = FontWeight.Bold,
                 fontSize = 28.sp,
@@ -73,15 +63,13 @@ fun PostHomeContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(onClick ={
-                onAction(PostHomeActions.OnPostClicked)
-            },
+            Button(onClick = onNavigateToPosts,
                 colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
             ) {
                 Text(
-                    text = "Ver Posts",
+                    text = stringResource(id = R.string.name_btn),
                     fontFamily = Inter,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp,
@@ -97,10 +85,9 @@ fun PostHomeContent(
 @Preview (showBackground = true, name = "Content")
 @Composable
 fun PostHomeScreenPreview(){
-    PostsCodingChallengeComposeTheme(){
+    PostsCodingChallengeComposeTheme{
         PostHomeContent(
-            state = PostHomeState(),
-            onAction = {}
+            onNavigateToPosts = {}
         )
     }
 }
@@ -110,8 +97,7 @@ fun PostHomeScreenPreview(){
 fun PostHomeScreenDarkPreview(){
     PostsCodingChallengeComposeTheme(darkTheme = true){
         PostHomeContent(
-            state = PostHomeState(),
-            onAction = {}
+            onNavigateToPosts = {}
         )
     }
 }

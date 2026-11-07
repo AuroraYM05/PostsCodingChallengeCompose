@@ -6,6 +6,7 @@ import com.aurora03.postscodingchallengecompose.data.mapper.PostMapper
 import com.aurora03.postscodingchallengecompose.data.service.ApiService
 import com.aurora03.postscodingchallengecompose.domain.model.PostsPage
 import com.aurora03.postscodingchallengecompose.domain.repository.AppRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -19,7 +20,7 @@ class AppRepositoryImpl @Inject constructor(
         private const val TAG = "AppRepositoryImpl"
     }
 
-    override suspend fun getPosts(): Flow<Resource<PostsPage>> = flow{
+    override fun getPosts(): Flow<Resource<PostsPage>> = flow{
 
         //Indica que comienza la operación
         emit (Resource.Loading)
@@ -43,7 +44,11 @@ class AppRepositoryImpl @Inject constructor(
                 emit(Resource.Error(response.message() ?: "No se logro cargar las publicaciones"))
             }
 
-        }catch (e: Exception){
+
+        }catch (e: CancellationException){
+            throw e
+        }
+        catch (e: Exception){
             emit(Resource.Error(message = e.localizedMessage ?: "Error desconocido", e))
         }
     }

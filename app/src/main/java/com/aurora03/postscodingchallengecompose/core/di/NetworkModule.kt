@@ -2,7 +2,6 @@ package com.aurora03.postscodingchallengecompose.core.di
 
 import com.aurora03.postscodingchallengecompose.data.service.ApiService
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,7 +53,6 @@ object NetworkModule {
     @Singleton
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
             .build()
     }
 

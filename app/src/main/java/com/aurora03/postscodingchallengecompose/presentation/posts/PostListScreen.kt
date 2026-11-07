@@ -2,11 +2,13 @@ package com.aurora03.postscodingchallengecompose.presentation.posts
 
 import kotlin.OptIn
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,7 +19,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,14 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aurora03.postscodingchallengecompose.R
 import com.aurora03.postscodingchallengecompose.domain.model.Post
 import com.aurora03.postscodingchallengecompose.ui.theme.Inter
@@ -46,10 +46,6 @@ fun PostListScreen(
     onNavigateBack: () -> Unit
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-       viewModel.onAction(PostListAction.LoadPost)
-    }
 
     PostListContent(
         state = uiState,
@@ -74,6 +70,24 @@ private fun PostListContent(
     val listState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
 
+
+    LaunchedEffect(Unit) {
+        onAction(PostListAction.LoadPost)
+    }
+
+    //Esto hace que muestre el error en SnackBar cuando exista
+    LaunchedEffect(state.hasError, state.errorMessage) {
+        //Muestra el Snackbar solamente cuando:
+        // 1. Ocurrió un error.
+        // 2. Ya existen publicaciones cargadas.
+        // 3. El mensaje de error no está vacío.
+        val message = state.errorMessage
+        if (state.hasError && !message.isNullOrBlank() && state.posts.isNotEmpty()){
+            snackbarHostState.showSnackbar(message)
+            onAction(PostListAction.ClearError)
+        }
+    }
+
     Scaffold(
         //Sirve para definir el contenido de la parte superior
         modifier = Modifier,
@@ -93,7 +107,7 @@ private fun PostListContent(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
                 title = { Text(
-                        text = "Lista de publicaciones",
+                        text = stringResource(R.string.text_publications),
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontFamily = Inter,
                         fontWeight = FontWeight.Normal,
@@ -109,13 +123,15 @@ private fun PostListContent(
                 .padding(paddingValues)
         ){
             when {
-                //Si la aplicacion esta cargando y no tiene publicaciones
+                //Si la aplicacion esta cargando y todavia no tiene publicaciones.
+                //Se muestra el indicador de carga
                 state.isLoading && state.posts.isEmpty() -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-
+                //Cuando hay publicaciones disponibles
+                //Se muestra las publicaciones
                 state.posts.isNotEmpty() -> {
                     LazyColumn(
                         state = listState,
@@ -130,6 +146,30 @@ private fun PostListContent(
                             )
                         }
                     }
+                }
+
+                //Error en la carga y no hay publicaciones disponibles.
+                //Se muestra el mensaje de error y un boton para recargar
+                state.hasError && state.posts.isEmpty() -> {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = state.errorMessage ?: stringResource(R.string.text_error_message),
+                            textAlign = TextAlign.Center
+                        )
+                        Button(onClick = {
+                            onAction(PostListAction.LoadPost)
+                        }) { Text(stringResource(R.string.txt_btn_error))}
+                    }
+                    //Cuando se realizo la carga sin errores pero no hay publicaciones disponibles.
+                    //Se muestra un mensaje donde que dice que no hay publicaciones
+                } else ->{
+                    Text(
+                        text = stringResource(R.string.text_empty_posts),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             }
         }

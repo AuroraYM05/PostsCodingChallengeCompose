@@ -76,8 +76,4 @@ class PostsViewModel @Inject constructor(
         }
 
     }
-
-    private fun BackClick(){
-
-    }
 }

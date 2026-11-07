@@ -1,6 +1,5 @@
 package com.aurora03.postscodingchallengecompose.presentation.posts
 
-import android.os.Message
 import com.aurora03.postscodingchallengecompose.domain.model.Post
 
 data class PostListState(

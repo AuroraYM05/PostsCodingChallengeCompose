@@ -16,17 +16,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aurora03.postscodingchallengecompose.ui.theme.Inter
+import com.aurora03.postscodingchallengecompose.ui.theme.PostsCodingChallengeComposeTheme
 
 /**
  * Pantalla principal de la aplicacion que contiene un Texto como titulo
  * y un botón
  */
-
-
 @Composable
 fun PostHomeScreen(
     onNavigateToPosts: () -> Unit,
@@ -49,7 +51,9 @@ fun PostHomeContent(
     onAction : (PostHomeActions) -> Unit
 ){
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.secondaryContainer
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -61,8 +65,10 @@ fun PostHomeContent(
             Text(
                 modifier = Modifier,
                 text = "Coding Challenge",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Black
+                fontFamily = Inter,
+                fontWeight = FontWeight.Bold,
+                fontSize = 28.sp,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -71,12 +77,16 @@ fun PostHomeContent(
                 onAction(PostHomeActions.OnPostClicked)
             },
                 colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Blue
+                containerColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
             ) {
                 Text(
                     text = "Ver Posts",
-                    color = Color.White
+                    fontFamily = Inter,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.background
+
                 )
             }
 
@@ -87,8 +97,21 @@ fun PostHomeContent(
 @Preview (showBackground = true, name = "Content")
 @Composable
 fun PostHomeScreenPreview(){
-    PostHomeContent(
-        state = PostHomeState(),
-        onAction = {}
-    )
+    PostsCodingChallengeComposeTheme(){
+        PostHomeContent(
+            state = PostHomeState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview (showBackground = true, name = "Content")
+@Composable
+fun PostHomeScreenDarkPreview(){
+    PostsCodingChallengeComposeTheme(darkTheme = true){
+        PostHomeContent(
+            state = PostHomeState(),
+            onAction = {}
+        )
+    }
 }

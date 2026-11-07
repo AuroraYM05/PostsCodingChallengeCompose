@@ -1,5 +1,9 @@
 package com.aurora03.postscodingchallengecompose.presentation.posts
 
+import android.R.id.bold
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -18,11 +23,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.aurora03.postscodingchallengecompose.R
 import com.aurora03.postscodingchallengecompose.domain.model.Post
+import com.aurora03.postscodingchallengecompose.ui.theme.Inter
 import com.aurora03.postscodingchallengecompose.ui.theme.PostsCodingChallengeComposeTheme
 
 @Composable
@@ -32,8 +44,16 @@ fun PostsListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                RoundedCornerShape(12.dp)
+            ),
         shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface),
+
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     )
     {
@@ -47,24 +67,38 @@ fun PostsListItem(
             ) {
                 Text(
                     text = stringResource(id = R.string.ListItem_textPublication),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.outline
+                    fontFamily = Inter,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 //Muestra el ID del usuario que lo envio
                 Text(
                     text = "${post.userId}",
-                    style = MaterialTheme.typography.labelMedium,
+                    fontFamily = Inter,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
+
+            Text(
+                text = post.title,
+                fontFamily = Inter,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             //Contenido de la publicación
             Text(
                 text = post.body,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Black
+                fontFamily = Inter,
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurface
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
             if (post.tags.isNotEmpty()){
 
@@ -75,6 +109,11 @@ fun PostsListItem(
                 ) {
                     post.tags.forEach { tag ->
                         Surface(
+                            modifier = Modifier
+                                .border(
+                                    width = 1.dp,
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = MaterialTheme.colorScheme.outline,),
                             shape = RoundedCornerShape(50),
                             color = MaterialTheme.colorScheme.secondaryContainer
                         ) {
@@ -84,37 +123,92 @@ fun PostsListItem(
                                     horizontal = 12.dp,
                                     vertical = 6.dp
                                 ),
-                                style = MaterialTheme.typography.labelMedium
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface
+
                             )
                         }
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 55.dp,
+                    alignment = Alignment.CenterHorizontally
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ){
+                    Image(
+                        modifier = Modifier.size(14.dp),
+                        painter = painterResource(R.drawable.likes),
+                        contentDescription = "Me gusta",
+                        colorFilter = ColorFilter.tint(
+                            MaterialTheme.colorScheme.secondary
+                        )
+                    )
+                    Text(
+                        text = "${post.likes}",
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface
 
-                Text(
-                    text = "Likes: ${post.likes}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ){
+                    Image(
+                    modifier = Modifier.size(14.dp),
+                    painter = painterResource(R.drawable.dislikes),
+                    contentDescription = "Me gusta",
+                    colorFilter = ColorFilter.tint(
+                        MaterialTheme.colorScheme.secondary
+                    )
                 )
 
-                Text(
-                    text = "Dislikes: ${post.dislikes}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black
-                )
+                    Text(
+                        text = "${post.dislikes}",
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
 
-                Text(
-                    text = "Vistas: ${post.views}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ){
+                    Image(
+                        modifier = Modifier.size(14.dp),
+                        painter = painterResource(R.drawable.views),
+                        contentDescription = "Me gusta",
+                        colorFilter = ColorFilter.tint(
+                            MaterialTheme.colorScheme.secondary
+                        )
+                    )
+
+                    Text(
+                        text = "${post.views}",
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
             }
         }
     }

@@ -24,6 +24,8 @@ class PostsViewModel @Inject constructor(
         when(action){
             is PostListAction.LoadPost -> loadPost()
             is PostListAction.ClearError -> clearError()
+            is PostListAction.NavigateBack -> {
+            }
         }
     }
 
@@ -72,6 +74,10 @@ class PostsViewModel @Inject constructor(
                 errorMessage = null
             )
         }
+
+    }
+
+    private fun BackClick(){
 
     }
 }

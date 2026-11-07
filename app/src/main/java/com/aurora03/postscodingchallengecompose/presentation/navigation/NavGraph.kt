@@ -30,7 +30,9 @@ fun AppNavGraph(
         }
 
         composable<Screen.PostList>{
-            PostListScreen()
+            PostListScreen(
+                onNavigateBack = {navController.popBackStack()}
+            )
         }
 
     }

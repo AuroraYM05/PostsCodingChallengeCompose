@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">PostsCodingChallengeCompose</string>
     
-    <string name="ListItem_textPublication">Publicado por usuario # </string>
+    <string name="ListItem_textPublication">Publicado por el usuario # </string>
 </resources>

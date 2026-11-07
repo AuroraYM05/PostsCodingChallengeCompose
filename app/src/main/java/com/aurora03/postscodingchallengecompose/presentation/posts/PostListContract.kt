@@ -16,5 +16,8 @@ sealed interface PostListAction {
 
     data object ClearError : PostListAction
 
+    data object NavigateBack: PostListAction
+
+
 
 }

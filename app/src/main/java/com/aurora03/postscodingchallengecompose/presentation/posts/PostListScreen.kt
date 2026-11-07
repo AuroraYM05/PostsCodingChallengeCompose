@@ -9,28 +9,41 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.aurora03.postscodingchallengecompose.R
 import com.aurora03.postscodingchallengecompose.domain.model.Post
+import com.aurora03.postscodingchallengecompose.ui.theme.Inter
 import com.aurora03.postscodingchallengecompose.ui.theme.PostsCodingChallengeComposeTheme
 
 
 @Composable
 fun PostListScreen(
-    viewModel: PostsViewModel = hiltViewModel()
+    viewModel: PostsViewModel = hiltViewModel(),
+    onNavigateBack: () -> Unit
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -41,7 +54,10 @@ fun PostListScreen(
     PostListContent(
         state = uiState,
         onAction = { action ->
-            viewModel.onAction(action)
+            when(action) {
+                is PostListAction.NavigateBack -> onNavigateBack()
+                else -> viewModel.onAction(action)
+            }
         }
     )
 
@@ -60,9 +76,29 @@ private fun PostListContent(
 
     Scaffold(
         //Sirve para definir el contenido de la parte superior
+        modifier = Modifier,
         topBar = {
             TopAppBar(
-                title = {Text("Lista de publicaciones")}
+                navigationIcon = {
+                    IconButton(
+                        onClick = {onAction(PostListAction.NavigateBack)}) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_back),
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                title = { Text(
+                        text = "Lista de publicaciones",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 24.sp
+                )}
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -127,6 +163,18 @@ val posts = listOf(
 @Composable
 fun PostListScreenPreview() {
     PostsCodingChallengeComposeTheme() {
+        PostListContent(
+            state = PostListState(
+                posts = posts
+            ), onAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PostListScreenDarkPreview() {
+    PostsCodingChallengeComposeTheme(darkTheme = true) {
         PostListContent(
             state = PostListState(
                 posts = posts

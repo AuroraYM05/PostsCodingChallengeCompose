@@ -4,7 +4,7 @@
 
 Aplicación en Android que obtiene y muestra publicaciones consumidas de una API.
 
-Funcionalidades:
+## Funcionalidades:
 
 * Consulta publicaciones desde una API.
 * Visualiza las publicaciones en una vista.
